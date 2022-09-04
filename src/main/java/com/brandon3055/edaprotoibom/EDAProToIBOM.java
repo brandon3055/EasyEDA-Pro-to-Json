@@ -132,7 +132,7 @@ public class EDAProToIBOM {
     public static void readProjectFile(InputStream fileStream) {
         JsonObject project;
         try (JsonReader reader = new JsonReader(new InputStreamReader(fileStream))){
-            project = new JsonParser().parse(reader).getAsJsonObject();
+            project = JsonParser.parseReader(reader).getAsJsonObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
