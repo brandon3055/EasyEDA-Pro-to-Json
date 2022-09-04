@@ -3,7 +3,6 @@ package com.brandon3055.edaprotoibom;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -12,7 +11,6 @@ import java.util.regex.Matcher;
  * Created by brandon3055 on 03/09/2022
  */
 public final class Poly {
-    @Nullable
     private final String net;
     private final int layer;
     private final double lineWidth;
@@ -223,7 +221,6 @@ public final class Poly {
         array.add(zone);
     }
 
-    @Nullable
     public String net() {return net;}
 
     public int layer() {return layer;}
