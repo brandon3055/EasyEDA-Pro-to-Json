@@ -58,12 +58,22 @@ public class EDAProToIBOM {
 
     public static JsonObject projectDevices;
 
+    //Got segments in ma tracks
+
     public static void main(String[] args) throws IOException {
-        if (args.length < 1) {
+        int argLen = args.length;
+        boolean overwrite = false;
+        if (args.length > 0 && args[argLen - 1].equalsIgnoreCase("-o")) {
+            overwrite = true;
+            argLen--;
+        }
+
+        if (argLen < 1) {
             System.err.println("Usage:");
-            System.err.println("java -jar EDAProToIBOM.jar Project/Document-Export.zip");
+            System.err.println("java -jar EDAProToIBOM.jar Project/Document-Export.zip <-o>");
             System.err.println("or");
-            System.err.println("java -jar EDAProToIBOM.jar Project/Document-Export.zip output_file.json");
+            System.err.println("java -jar EDAProToIBOM.jar Project/Document-Export.zip output_file.json <-o>");
+            System.err.println("Adding -o will enable overwriting the output file if it already exists");
             System.exit(0);
         }
 
@@ -77,15 +87,25 @@ public class EDAProToIBOM {
         }
 
         File output = new File(input.getParentFile(), input.getName().replace(".zip", "") + ".json");
-        if (args.length > 1) {
+        if (argLen > 1) {
             output = new File(args[1]);
+            if (output.exists() && output.isDirectory()) {
+                output = new File(output, input.getName().replace(".zip", "") + ".json");
+                LOGGER.info("Outputting to specified directory: " + output.getParentFile().getAbsolutePath());
+            }
+        }else {
+            LOGGER.info("No output file specified. Will base output file name on input file name: " + output.getAbsolutePath());
         }
 
-        if (output.exists()) {
+        if (output.exists() && !overwrite) {
             LOGGER.error("Output file already exists! " + output.getAbsolutePath());
-            LOGGER.error("This application will not overwrite an existing file. Please remove the existing output file or choose a new file name.");
+            LOGGER.error("add -o to the end to the end of the command if you wish to overwrite the existing file.");
             LOGGER.info("Output File: " + output.getAbsolutePath());
             System.exit(0);
+        }
+
+        if (!output.getAbsoluteFile().exists() && !output.getAbsoluteFile().getParentFile().exists() && !output.getAbsoluteFile().getParentFile().mkdirs()) {
+            throw new IOException("Directory for output file does not exist and could not be created!");
         }
 
         PCBProcessor pcbProcessor = null;
