@@ -67,6 +67,7 @@ public final class Pad implements HasDimensions {
             if (holeShape.equals("ROUND")) {
                 drillsize = new Point(Double.parseDouble(geoValues[1]), Double.parseDouble(geoValues[2]));
             } else {
+                drillsize = new Point(10, 10); //
                 LOGGER.warn("Skipping unsupported hole shape: " + holeShape);
             }
             rawLine = matcher.replaceFirst("");

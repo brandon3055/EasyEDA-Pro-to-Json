@@ -2,6 +2,8 @@ package com.brandon3055.edaprotoibom;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.util.*;
@@ -11,6 +13,8 @@ import java.util.regex.Matcher;
  * Created by brandon3055 on 03/09/2022
  */
 public final class Poly {
+    public static final Logger LOGGER = LogManager.getLogger(Poly.class);
+
     private final String net;
     private final int layer;
     private final double lineWidth;
@@ -141,6 +145,10 @@ public final class Poly {
             object.addProperty("width", lineWidth);
             array.add(object);
         } else {
+            if (layer == 1 || layer == 2) {
+                LOGGER.error("Line segments are not currently supported on copper layers. Skipping...");
+                return;
+            }
             Point last = pos;
             //Poly to segments because IBOM does not seem to support open-ended polies.
             for (Point point : points) {

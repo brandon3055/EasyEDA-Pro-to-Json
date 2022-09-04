@@ -6,7 +6,7 @@ plugins {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 group = 'com.brandon3055'
-version = '0.0.3-' + getDate()
+version = '0.0.4-' + getDate()
 archivesBaseName = "EDAProToIBOM"
 
 repositories {
