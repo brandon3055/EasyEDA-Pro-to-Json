@@ -50,14 +50,6 @@ public final class Poly {
             valueString = Helpers.stripOuterCharacters(valueString);
         }
         values = valueString.split(",");
-//        if (values[0].contains("FILL")) {
-//            matcher = EDAProToIBOM.UNWRAP_BRACKETS.matcher(valueString);
-//            if (!matcher.find()) {
-//                throw new ParseException("Unable to parse poly! Skipping. L:" + lineNumber, lineNumber);
-//            }
-//            valueString = Helpers.stripOuterCharacters(Helpers.stripOuterCharacters(matcher.group()));
-//            values = valueString.split(",");
-//        }
 
 
         if (Helpers.stripOuterCharacters(values[0]).equals("R")) {
@@ -165,36 +157,6 @@ public final class Poly {
         }
     }
 
-//    public JsonObject toJson() {
-//        return toJson(new Point(0, 0));
-//    }
-//
-//    public JsonObject toJson(Point offset) {
-//        JsonObject object = new JsonObject();
-//        object.addProperty("type", type);
-//
-//        if (type.equals("rect")) {
-//            object.add("start", Helpers.valueArray(pos.add(offset)));
-//            object.add("end", Helpers.valueArray(pos.add(points[0]).add(offset)));
-//            object.addProperty("width", lineWidth);
-//        } else {
-//            object.addProperty("width", lineWidth);
-//            object.addProperty("filled", 0);
-//            object.addProperty("angle", 0);
-////            object.add("pos", Utils.valueArray(points[0].x, points[0].y));
-//            object.add("pos", Helpers.valueArray(0, 0));
-//            JsonArray polyPoints = new JsonArray();
-//            for (Point point : points) {
-//                polyPoints.add(Helpers.valueArray(point.add(offset)));
-//            }
-//            JsonArray polyArray = new JsonArray();
-//            polyArray.add(polyPoints);
-//            object.add("polygons", polyArray);
-//        }
-//
-//        return object;
-//    }
-
     public void toJsonZone(JsonArray array) {
         JsonObject zone = new JsonObject();
         JsonArray polies = new JsonArray();
@@ -261,37 +223,4 @@ public final class Poly {
                 "type=" + type + ", " +
                 "points=" + points + ']';
     }
-
-
-//    public void rectAsSegments(JsonArray array) {
-//        Point p = points[0];
-//        JsonObject segTop = segStart();
-//        segTop.add("start", Helpers.valueArray(x, y));
-//        segTop.add("end", Helpers.valueArray(x + p.x(), y));
-//        array.add(segTop);
-//
-//        JsonObject segBottom = segStart();
-//        segBottom.add("start", Helpers.valueArray(x, y + p.y()));
-//        segBottom.add("end", Helpers.valueArray(x + p.x(), y + p.y()));
-//        array.add(segBottom);
-//
-//        JsonObject segLeft = segStart();
-//        segLeft.add("start", Helpers.valueArray(x, y));
-//        segLeft.add("end", Helpers.valueArray(x, y + p.y()));
-//        array.add(segLeft);
-//
-//        JsonObject segRight = segStart();
-//        segRight.add("start", Helpers.valueArray(x + p.x(), y));
-//        segRight.add("end", Helpers.valueArray(x + p.x(), y + p.y()));
-//        array.add(segRight);
-//    }
-
-//    private JsonObject segStart() {
-//        JsonObject object = new JsonObject();
-//        object.addProperty("type", "segment");
-//        object.addProperty("width", lineWidth);
-//        return object;
-//    }
-
-
 }

@@ -95,9 +95,6 @@ public final class Pad implements HasDimensions {
             }
             geoValues = Helpers.stripOuterCharacters(matcher.group()).split(",");
             shape = "custom";
-//            double startX = Double.parseDouble(geoValues[0]);
-//            double startY = -Double.parseDouble(geoValues[1]);
-//            polys.add(new Point(startX, startY));
             for (int i = 3; i + 1 < geoValues.length; i += 2) {
                 polys.add(new Point(Double.parseDouble(geoValues[i]), -Double.parseDouble(geoValues[i + 1])));
             }
@@ -106,25 +103,6 @@ public final class Pad implements HasDimensions {
             throw new ParseException("Found unsupported pad shape: "+ padShape+" Skipping. L:" + lineNumber, lineNumber);
         }
     }
-    //PCB Pads //Layer 12 is multi-layer
-    //   0     1    2   3    4   5   6          7            Hole                       Pad Shape
-    //["PAD","e397",0,"AGND",12,"1",3444.8714,-1377.9528,0,["ROUND",35.4331,35.4331],["ELLIPSE",59.0551,59.0551],[],0,0,0,1,0,null,null,null,null,0]
-    //["PAD","e398",0,"AGND",12,"1",3602.3517,-1377.9528,0,["ROUND",35.4331,35.4331],["ELLIPSE",59.0551,59.0551],[],0,0,0,1,0,null,null,null,null,0]
-    //["PAD","e1732",0,"$1N93875",12,"1",2513.7745,-1755.902,0,["ROUND",33.4646,33.4646],["ELLIPSE",45.2756,45.2756],[],0,0,0,1,0,null,null,null,null,0]
-    //["PAD","e1733",0,"$1N91004",12,"1",1283.462,-1775.587,0,["ROUND",33.4646,33.4646],["ELLIPSE",45.2756,45.2756],[],0,0,0,1,0,null,null,null,null,0]
-    //["PAD","e1734",0,"$1N91419",12,"1",1653.54,-1624.0125,0,["ROUND",33.4646,33.4646],["ELLIPSE",45.2756,45.2756],[],0,0,0,1,0,null,null,null,null,0]
-    //["PAD","e1735",0,"$1N93618",12,"1",2131.8855,-1624.0125,0,["ROUND",33.4646,33.4646],["ELLIPSE",45.2756,45.2756],[],0,0,0,1,0,null,null,null,null,0]
-
-    //Footprint Pads
-    //["PAD","objId",?,"?",layer,"pin",xPosRelComp,yPosRelComp,0,null,["RECT",width,height],[],-0.003,0.002,90,1,0,1.9689999999999999,1.9689999999999999,-3937,-3937,0]
-
-    //   0     1  2  3 4  5     6     7    no-Hole     Pad Shape
-    //["PAD","e9",0,"",1,"1",-49.21,-75.1,0,null,["RECT",11.024,26.181],[],-0.003,0.002,90,1,0,1.9689999999999999,1.9689999999999999,-3937,-3937,0]
-    //["PAD","e10",0,"",1,"2",-29.53,-75.1,0,null,["RECT",11.024,26.181],[],0.002,0.002,90,1,0,1.9689999999999999,1.9689999999999999,-3937,-3937,0]
-    //["PAD","e11",0,"",1,"3",-9.84,-75.1,0,null,["RECT",11.024,26.181],[],-0.003,0.002,90,1,0,1.9689999999999999,1.9689999999999999,-3937,-3937,0]
-    //["PAD","e12",0,"",1,"4",9.84,-75.1,0,null,["RECT",11.024,26.181],[],0.003,0.002,90,1,0,1.9689999999999999,1.9689999999999999,-3937,-3937,0]
-    //["PAD","e13",0,"",1,"5",29.53,-75.1,0,null,["RECT",11.024,26.181],[],-0.002,0.002,90,1,0,1.9689999999999999,1.9689999999999999,-3937,-3937,0]
-    //["PAD","e14",0,"",1,"6",49.21,-75.1,0,null,["RECT",11.024,26.181],[],0.003,0.002,90,1,0,1.9689999999999999,1.9689999999999999,-3937,-3937,0]
 
     public Rect toJsonNoPoly(JsonArray array, Point offset, double angle) {
         JsonObject pad = new JsonObject();

@@ -29,7 +29,6 @@ public class FootprintProcessor extends DocumentProcessor {
         }
     }
 
-
     public JsonObject jsonForComponent(Component component) {
         Point size = endPos.subtract(startPos);
         JsonObject object = new JsonObject();
@@ -59,9 +58,6 @@ public class FootprintProcessor extends DocumentProcessor {
         bbox.add("relpos", Helpers.valueArray(0, 0));
         bbox.addProperty("angle", 0);
         object.add("bbox", bbox);
-
-
-//        polies.forEach(poly -> Helpers.getLayerArray(component.layerInt).add(poly.toJson(component.center)));
 
         polies.forEach(poly -> poly.toJson(Helpers.getSilkLayerArray(poly.layer()), component.center, component.angle, startPos.add(size.mult(0.5))));
 

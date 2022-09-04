@@ -17,7 +17,6 @@ public class PCBProcessor extends DocumentProcessor {
         super(fileStream, "PCB", fileName);
     }
 
-    //Will probably end up running after footprints and also handle footprint data
     public void postProcess() {
         for (Line line : lines) {
             JsonArray layer = Helpers.getLayerArray(line.layer());

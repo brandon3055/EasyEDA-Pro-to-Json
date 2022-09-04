@@ -90,6 +90,7 @@ public class EDAProToIBOM {
 
         PCBProcessor pcbProcessor = null;
 
+        //TODO switch to nio zip system
         try (ZipFile zipInput = new ZipFile(input)) {
             Enumeration<? extends ZipEntry> entries = zipInput.entries();
             while (entries.hasMoreElements()) {
