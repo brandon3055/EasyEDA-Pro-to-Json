@@ -68,4 +68,13 @@ public final class Point {
         return new Point(Math.max(p1.x(), p2.x()), Math.max(p1.y(), p2.y()));
     }
 
+    public double getAngle(Point target) {
+        double angle = (float) Math.toDegrees(Math.atan2(target.y - y, target.x - x));
+
+        if(angle < 0){
+            angle += 360;
+        }
+
+        return angle;
+    }
 }

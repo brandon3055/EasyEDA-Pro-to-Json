@@ -29,7 +29,7 @@ public final class Poly {
 
     private double circleRadius;
 
-    private final int filled = 1;
+    private final int filled = 0;
 
     public boolean isPour = false;
 
@@ -99,51 +99,65 @@ public final class Poly {
             object.addProperty("width", lineWidth);
             array.add(object);
         } else if (type.equals("arc")) {
-            JsonObject object = new JsonObject();
-            object.addProperty("type", type);
-//            Point arcStart = Helpers.rotate(this.arcStart, centerRef, angle);
-//            Point arcEnd = Helpers.rotate(this.arcEnd, centerRef, angle);
+            JsonObject arc = new JsonObject();
+            arc.addProperty("type", type);
 
-            double triAngles = (180 - Math.abs(arcAngle)) / 2;
-            double L = Helpers.getDistance(arcStart, arcEnd) / 2;
-            double d = L / (2 * Math.cos(triAngles));
-            double inclination = -18.434948823D + triAngles;
-            double centerX = 2 + (d * Math.cos(inclination));
-            double centerY = 3 + (d * Math.sin(inclination));
-            Point center = new Point(centerX, centerY);
+            double toRad = Math.PI / 180;
 
-//            arcAngle
+            Point A_POS = Helpers.rotate(this.arcStart, centerRef, angle).add(offset);
+            Point B_POS = Helpers.rotate(this.arcEnd, centerRef, angle).add(offset);
 
-//            Point arcCenter = Helpers.centroid(arcStart, arcEnd);
-            double radius = Helpers.getDistance(center.add(offset), arcStart.add(offset)) / 2;
+            if (arcAngle == 180) {
+                double c_AB = Helpers.getDistance(A_POS, B_POS); //Distance from point A to point B
+                Point C_POS = Helpers.centroid(A_POS, B_POS);
+                double AB_deg = A_POS.getAngle(B_POS); // Angle between point a and b
 
+                arc.addProperty("startangle", AB_deg);
+                arc.addProperty("endangle", AB_deg + arcAngle);
 
-//            Point start = Helpers.rotate(center, centerRef, angle);
+                arc.add("start", Helpers.valueArray(C_POS));
+                arc.addProperty("radius", c_AB/2);
 
+            }else {
 
-//            float startangle = (float) Math.toDegrees(Math.atan2(start.y() - arcCenter.y(), start.x() - arcCenter.x()));
+                double c_AB = Helpers.getDistance(A_POS, B_POS);    // Distance from point A to point B
+                double A_deg = (180 - arcAngle) / 2;                // Angle at point A (I know A & B will be the same)
+                double B_deg = A_deg;                               // Angle at point B
+                double C_deg = arcAngle;                            // Angle at point C
+                double a_CB = c_AB * Math.sin(A_deg * toRad) / Math.sin(C_deg * toRad); //Distance from point C to point B
+                double b_CA = c_AB * Math.sin(B_deg * toRad) / Math.sin(C_deg * toRad); //Distance from point C to point A
 
-            center = Helpers.rotate(center, centerRef, angle);
+                double AB_deg = A_POS.getAngle(B_POS);              // Angle between point a and b
+                double Cx = A_POS.x() + (Math.cos((AB_deg - A_deg) * toRad) * a_CB);
+                double Cy = A_POS.y() + (Math.sin((AB_deg - A_deg) * toRad) * a_CB);
+                Point C_POS = new Point(Cx, Cy);
 
-            object.add("start", Helpers.valueArray(center.add(offset)));
-            object.addProperty("radius", 0);
-//            object.addProperty("startangle", startangle);
-            object.addProperty("startangle", 0);
-//            object.addProperty("endangle", startangle + arcAngle);
-            object.addProperty("endangle", 45);
-            object.addProperty("width", lineWidth);
+                double startAngle = AB_deg + A_deg;
 
+                if (a_CB <= 0) {
+                    a_CB = Math.abs(a_CB);
+                    arc.addProperty("startangle", startAngle + arcAngle + 180);
+                    arc.addProperty("endangle", startAngle + 180);
+                } else {
+                    arc.addProperty("startangle", startAngle);
+                    arc.addProperty("endangle", startAngle + arcAngle);
+                }
+                arc.add("start", Helpers.valueArray(C_POS));
+                arc.addProperty("radius", a_CB);
+            }
 
-//            array.add(object);
+            arc.addProperty("width", lineWidth);
+            array.add(arc);
+
         } else if (type.equals("circle")) {
-            JsonObject object = new JsonObject();
-            object.addProperty("type", type);
+            JsonObject circle = new JsonObject();
+            circle.addProperty("type", type);
             Point start = Helpers.rotate(pos, centerRef, angle);
-            object.add("start", Helpers.valueArray(start.add(offset)));
-            object.addProperty("radius", circleRadius);
-            object.addProperty("filled", filled);
-            object.addProperty("width", lineWidth);
-            array.add(object);
+            circle.add("start", Helpers.valueArray(start.add(offset)));
+            circle.addProperty("radius", circleRadius);
+            circle.addProperty("filled", filled);
+            circle.addProperty("width", lineWidth);
+            array.add(circle);
         } else {
             if (layer == 1 || layer == 2) {
                 LOGGER.error("Line segments are not currently supported on copper layers. Skipping...");
@@ -179,7 +193,7 @@ public final class Poly {
             } else {
                 return;
             }
-        }else {
+        } else {
             for (Point point : points) {
                 poly.add(Helpers.valueArray(point));
             }
