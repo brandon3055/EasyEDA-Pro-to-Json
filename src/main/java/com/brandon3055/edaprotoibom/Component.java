@@ -85,14 +85,32 @@ public class Component {
                 JsonObject attributes = dev.getAsJsonObject("attributes");
                 footprint = Helpers.getString(attributes, "Supplier Footprint", footprint);
 
+                String mfp = Helpers.getString(attributes, "Manufacturer Part", "");
+                String lcsc = Helpers.getString(attributes, "LCSC Part Name", "");
                 if (attributes.has("Value")) {
                     val = Helpers.getString(attributes, "Value", val);
                 } else {
-                    val = Helpers.getString(attributes, "Supplier Part", val);
+                    if (mfp.contains("Ω")) {
+                        val = mfp;
+                    } else if (lcsc.contains("Ω")) {
+                        val = lcsc;
+                    } else {
+                        val = !mfp.isEmpty() ? mfp : !lcsc.isEmpty() ? lcsc : val;
+                    }
+                }
+
+                if (mfp.contains("Ω") && mfp.contains("%")) {
+                    val = mfp;
+                } else if (lcsc.contains("Ω") && lcsc.contains("%")) {
+                    val = lcsc;
                 }
 
                 for (Map.Entry<String, JsonElement> entry : attributes.entrySet()) {
-                    extra_fields.addProperty(entry.getKey(), entry.getValue().toString());
+                    String value = entry.getValue().toString();
+                    if (value.startsWith("\"") && value.endsWith("\"")) {
+                        value = Helpers.stripOuterCharacters(value);
+                    }
+                    extra_fields.addProperty(entry.getKey(), value);
                 }
             }
         }
